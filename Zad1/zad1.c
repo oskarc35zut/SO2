@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <utmp.h>
+#include <pwd.h>
+
 
 
 main( int argc, char **argv)
@@ -19,16 +22,42 @@ printf("  ######################################################################
 	char *cvalue = NULL;
 	opterr = 0; //no default "invalid option" info
 
+	struct psswd *getpwid;
+	
+	utmpname("/var/run/utmp");
+	//struct utmp *get = getutent();
+	struct utmp *get_usr;
+	int param = 0;
+		
+	
+	//printf("get = %s", *get);
 
 	while ((ret = getopt (argc, argv, "abc:")) != -1)
 		{
 		switch (ret) 
 			{
 			case 'a':
-				aflag = 1;
+				param = 1;
+				
+				while((get_usr = getutent()) != NULL)
+				{
+					if((get_usr->ut_type) == 7)
+					{
+					printf("%d %s\n",get_usr->ut_pid,get_usr->ut_user);
+					}
+				}
 				break;
 			case 'b':
-				bflag = 1;
+				param = 1;
+				
+				while((get_usr = getutent()) != NULL)
+				{
+					if((get_usr->ut_type) == 7)
+					{
+					printf("%s [\n",get_usr->ut_user);
+					}
+				}
+				
 				break;
 			case 'c':
 				cvalue = optarg;
@@ -38,12 +67,30 @@ printf("  ######################################################################
 					fprintf (stderr, "Option -%c requires an argument.\n", optopt);
 				else
 					fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+
+
+				
 			return 1;
-			default: abort ();
+			default:
+
+				abort ();
+				break;
 			}
 		}
 
+	
+	if(param == 0)
+	{
+		while((get_usr = getutent()) != NULL)
+		{
+		if((get_usr->ut_type) == 7)
+		{
+		printf("%s\n",get_usr->ut_user);
+		}
+		}
+	}
 
+	/*
 	printf ("aflag = %d, bflag = %d, cvalue = %s\n", aflag, bflag, cvalue);
 	printf ("non-option arguments: ");
 
@@ -53,8 +100,9 @@ printf("  ######################################################################
 		
 	}
 	
-	printf ("");
+	//printf ("");
 	for (index = 1; index < argc; index++) printf ("argv[%d]:%s ", index, argv[index]); //wyślwietlenie tablicy wejscia
-	
+	//printf ("");
+	*/
 return 0;
 }
