@@ -1,0 +1,3 @@
+#!/bin/bash
+clear
+gcc zad1.c -o zad1

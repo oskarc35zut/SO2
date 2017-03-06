@@ -49,12 +49,10 @@ printf("  ######################################################################
 
 	for (index = optind; index < argc; index++)
 	{
-		printf ("\n %s ", argv[index]);
-		
+		printf (" %s ", argv[index]);
+		printf ("\n");
 	}
-	
-	printf ("");
-	for (index = 1; index < argc; index++) printf ("argv[%d]:%s ", index, argv[index]); //wyślwietlenie tablicy wejscia
-	
+	for (index = 1; index < argc; index++) printf ("argv[%d]:%s ", index, argv[index]);
+
 return 0;
 }
