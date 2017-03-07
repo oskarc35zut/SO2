@@ -60,14 +60,73 @@ printf("  ######################################################################
 					if((get_usr->ut_type) == 7)
 					{
 
-					get_pwid = getpwid(7);
-					printf("%s [%s\n",get_usr->ut_user,get_pwid->pw_name);
+					//get_pwid = getpwid(7);
+					//printf("%s [\n",get_usr->ut_user);
 					
+					//int getgrouplist(const char *user, gid_t group, gid_t *groups, int *ngroups);
+
+ 	int j, ngroups;
+           gid_t *groups;
+           struct passwd *pw;
+           struct group *gr;
+
+	/*
+           if (argc != 3) {
+               fprintf(stderr, "Usage: %s <user> <ngroups>\n", argv[0]);
+           }
+	*/
+
+					while((get_usr = getutent()) != NULL)
+				{
+					if((get_usr->ut_type) == 7)
+					{
+					//printf("%d %s\n",get_usr->ut_pid,get_usr->ut_user);
+					ngroups = 100;//atoi((get_usr->ut_pid));
+					pw = getpwnam((get_usr->ut_user));
+					printf("%s [",get_usr->ut_user);
+					break;
+					}
+				}
+           
+
+           groups = malloc(ngroups * sizeof (gid_t));
+           if (groups == NULL) {
+               perror("malloc");
+              
+           }
+
+           /* Fetch passwd structure (contains first group ID for user) */
+
+           
+           if (pw == NULL) {
+               perror("getpwnam");
+               
+           }
+
+           /* Retrieve group list */
+//printf("NK\n");
+           if (getgrouplist(get_usr->ut_user, pw->pw_gid, groups, &ngroups) == -1) {
+               fprintf(stderr, "getgrouplist() returned -1; ngroups = %d\n",
+                       ngroups);
+           }
+
+           /* Display list of retrieved groups, along with group names */
+
+           //fprintf(stderr, "ngroups = %d\n", ngroups);
+           for (j = 0; j < ngroups; j++) {
+               //printf("%d", groups[j]);
+               gr = getgrgid(groups[j]);
+               if (gr != NULL)
+                   printf(" %s ", gr->gr_name);
+              // printf("\n");
+           }
+
+          
 					}
 				}
 
 				
-				
+				printf("]\n");
 				break;
 			case 'c':
 				cvalue = optarg;
