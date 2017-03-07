@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <utmp.h>
 #include <pwd.h>
+#include <grp.h>
+#include <unistd.h>
 
 
 
@@ -18,15 +20,18 @@ printf("  ######################################################################
 
 //./zad1 x -a -c 10 a b
 
-	int aflag = 0, bflag = 0, ret, index;
+	int ret, index;
 	char *cvalue = NULL;
 	opterr = 0; //no default "invalid option" info
 
-	struct psswd *getpwid;
+	
 	
 	utmpname("/var/run/utmp");
-	//struct utmp *get = getutent();
+
 	struct utmp *get_usr;
+	struct group *get_list;
+	struct psswd *get_pwid;
+	gid_t *groups;
 	int param = 0;
 		
 	
@@ -54,9 +59,14 @@ printf("  ######################################################################
 				{
 					if((get_usr->ut_type) == 7)
 					{
-					printf("%s [\n",get_usr->ut_user);
+
+					get_pwid = getpwid(7);
+					printf("%s [%s\n",get_usr->ut_user,get_pwid->pw_name);
+					
 					}
 				}
+
+				
 				
 				break;
 			case 'c':
