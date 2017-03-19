@@ -1,0 +1,6 @@
+#!/bin/bash
+gcc -c -fPIC libzad2.c
+ar cr libzad2.a libzad2.o
+gcc -shared -fPIC libzad2.o \-o libzad2.so -nostartfiles
+gcc -c -fPIC zad2.c
+gcc -L. -o zad2_run zad2.c -ldl
