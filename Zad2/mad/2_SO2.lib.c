@@ -16,10 +16,10 @@ void UserPID(char* username)
   {
   if((login[0]->ut_user == username))
   {
-    if((login[0]->ut_type == 7))
-    {
+    //if((login[0]->ut_type == 7))
+    //{
       printf("%d  %s\n",login[0]->ut_pid,login[0]->ut_user);
-    }
+    //}
   }
 }
 }

@@ -43,10 +43,12 @@
 	struct group *get_list;
 	struct psswd *get_pwid;
 	gid_t *groups;
+	char* usr_name;
 
 		while((get_usr = getutent()) != NULL)
-				{
-					if((get_usr->ut_type) == 7 && (get_usr->ut_user) != username)
+				{	
+					usr_name = get_usr->ut_user;
+					if(usr_name != username && (get_usr->ut_type) == 7)
 					{
 
  	int j, ngroups;
