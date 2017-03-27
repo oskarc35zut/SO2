@@ -32,21 +32,27 @@ int main( int argc, char **argv)
 		char input_two[(length/2)];
 		for(int i = 0; i < (length/2); i++) input_two[i] = input[i+((length/2))];
 		
-		pid_t pID = fork();
-		
-		if(pID == 0)
+		pid_t pID1 = fork();
+		if(pID1 == 0)
 		{
 		execlp("./errest", "errest", input_one , NULL);
-		execlp("./errest", "errest", input_two , NULL);
 		}
-		if(pID > 0)
+		if(pID1 > 0)
 		{
-		//kill(pID, SIGINT);
 		wait(0);
 		}
 
-		//printf( "%s\n",input_one);	
-		//printf( "%s\n",input_two);
+		pid_t pID2 = fork();
+		if(pID2 == 0)
+		{
+		execlp("./errest", "errest", input_two , NULL);
+		}
+		if(pID2 > 0)
+		{
+		wait(0);
+		}
+		
+
 		
 		
 		}
