@@ -27,8 +27,10 @@ int main( int argc, char **argv)
 
 
 	if((length%2) != 0 && (length) != 1) {length--;}
+	
+	char* ar2;
+	char bufor[30];
 
-	char* his = 0;
 
 	if(length > 1)
 		{
@@ -41,9 +43,16 @@ int main( int argc, char **argv)
 		pid_t pID1 = fork();
 		if(pID1 == 0)
 			{
-			
-			his = strcut(input,input_one);
-			execlp("./errest", "errest", input_one , NULL);
+
+			if(argc > 2)
+			{
+				ar2 = argv[2];
+				strcat(bufor, ar2);
+			}
+			strcat(bufor," ");
+			const char* in = input_one;
+			strcat(bufor, in);
+			execlp("./errest", "errest", input_one , 4444, NULL);
 			}
 		if(pID1 > 0)
 			{
@@ -55,6 +64,7 @@ int main( int argc, char **argv)
 		pid_t pID2 = fork();
 		if(pID2 == 0)
 			{
+			//his = strcpy(argv[2],input_two);
 			execlp("./errest", "errest", input_two , NULL);
 			}
 		if(pID2 > 0)
@@ -72,6 +82,6 @@ int main( int argc, char **argv)
 
 
 	
-	printf( "%s \n",input);
+	printf( "%s %s \n",bufor, input);
 	return 0;
 	}
