@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <unistd.h>
+#include <string.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,20 +18,17 @@ int main( int argc, char **argv)
 {	
 	char* input = argv[1];
 
-	printf( "%s\n",input);
+	
 
 	int length = 0;
-	while(input[length] != '\0') {length++;}
+	
+	length = strlen(input);
 
-	if (length < 2)
-{
-exit(0);
-return 0;
-}
+
 
 	if((length%2) != 0 && (length) != 1) {length--;}
 
-	printf( "## długosć= %d\n",length);
+	char* his = 0;
 
 	if(length > 1)
 		{
@@ -43,10 +41,14 @@ return 0;
 		pid_t pID1 = fork();
 		if(pID1 == 0)
 			{
+			
+			his = strcut(input,input_one);
 			execlp("./errest", "errest", input_one , NULL);
 			}
 		if(pID1 > 0)
 			{
+			
+			
 			wait(0);
 			}
 
@@ -57,6 +59,9 @@ return 0;
 			}
 		if(pID2 > 0)
 			{
+			//if (strlen(input) == 1)
+{
+}
 			wait(0);
 			}
 		
@@ -64,13 +69,9 @@ return 0;
 		
 		
 		}
-		else
-		{
-			printf( "%s\n", input);
-			exit(0);
-		}
+
 
 	
-
+	printf( "%s \n",input);
 	return 0;
 	}
