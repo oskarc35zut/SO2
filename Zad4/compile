@@ -1,3 +1,4 @@
 #!/bin/bash
 clear
-gcc errest.c -o errest
+gcc zad4.c -o zad4
+./zad4 abcd

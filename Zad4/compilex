@@ -1,4 +1,0 @@
-#!/bin/bash
-clear
-gcc zad3.c -o zad3
-./zad3
