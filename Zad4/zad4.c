@@ -72,7 +72,7 @@ int main( int argc, char **argv)
 
 			const char* in = input_one;
 
-			execlp("./errest", "errest", input_one , bufor, NULL);
+			execlp(argv[0], argv[0], input_one , bufor, NULL);
 			}
 
 
@@ -91,7 +91,7 @@ int main( int argc, char **argv)
 			if(pID2 == 0)
 			{
 
-			execlp("./errest", "errest", input_two , bufor, NULL);
+			execlp(argv[0], argv[0], input_two , bufor, NULL);
 
 			}
 
