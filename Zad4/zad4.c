@@ -22,7 +22,19 @@ int tmp = 0;
 	//kill(pIDroot, SIGINT);
 }
 
+void getNap() {
+	printf("%d Zasypia\n", getpid());
+	while (1)
+	{
+		if (flaga != 0)
+		{
+			break;
+		}
+	}
 
+
+
+}
 
 extern char** environ;
 int main( int argc, char **argv)
@@ -115,76 +127,59 @@ int main( int argc, char **argv)
 		for(int i = 0; i < (length/2); i++) input_two[i] = input[i+((length/2))];
 		//end Dzielenie wejscia na dwie zmienne////////////////////////////
 
-		//Pierwsze dziecko//////////
-		pid_t pID1 = fork();
-		//Rodzimy dzieci
-		if(pID1 == 0)
+			//Pierwsze dziecko//////////
+			pid_t pID1 = fork();
+			if(pID1 == 0)
 			{
 				setpgid(pID1,pID1);
-			//const char* in = input_one;
-			execlp(argv[0], argv[0], input_one , bufor, NULL);
+				execlp(argv[0], argv[0], input_one , bufor, NULL);
 			}
-
-
-			//czekamy na smiersc dziecka
-			if(pID1 > 0)
-			{
-
-				while (1) {
-					if (flaga != 0) {
-
-						break;
-					}
-					break;
-				}
-				//kill(pID1, SIGINT);
-wait(0);
-
-			}
-			//end czekamy na smiersc dziecka ///////////////////////
 			//end Pierwsze dziecko//////////////////////////////////
-
 
 			//Drugie dziecko/////////////////
 			pid_t pID2 = fork();
-
-			if(pID2 == 0)
-			{
+			if(pID2 == 0){
 			setpgid(pID2,pID2);
-			//printf("Arkagdynia ");
 			execlp(argv[0], argv[0], input_two , bufor, NULL);
-
 			}
-
-			//czekamy na smiersc dziecka
-			if(pID2 > 0) {
-				while (1) {
-					if (flaga != 0) {
-						break;
-					}
-					break;
-				}
-				//kill(pID2, SIGINT);
-				//kill(pIDroot, SIGINT);
-
-				wait(0);
-			}
-			//end czekamy na smiersc dziecka
 			//end Drugie dziecko////////////////////////////////////
 
+			getNap();
+
+			//czekamy na smiersc dzieci
+			if(pID1 > 0){
+				kill(pID1, SIGINT);
+				wait(0);
+			}
+			if(pID2 > 0)
+			{
+				kill(pID2, SIGINT);
+				wait(0);
+			}
+
+
+
+			kill(pIDroot, SIGINT);
+
+		}
+		else
+		{
+			getNap();
 		}
 //end Rodzimy dzieci/////////////////////
 
-if (argv[1] != "abcd") {
+
+
+if (argc == 2) {
 	int tmp = 0;
-	for (size_t i = 0; i < 1; i++) {
+	for (size_t i = 0; i < length*600000; i++) {
 		tmp++;
 		tmp--;
 	}
 }
 
 
-printf( "%s ",bufor);
+printf( "\b\b%s ",bufor);
 
 if (0) {
 
