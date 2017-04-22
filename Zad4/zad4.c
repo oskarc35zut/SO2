@@ -70,11 +70,11 @@ int main( int argc, char **argv)
 	pIDroot = atoi(ppp);
 
 	//Zmiana obslugi sygnalu smierci////
-	struct sigaction sa;
+	struct sigaction exterminuj;
 
-	sa.sa_flags = SA_SIGINFO;
+	exterminuj.sa_flags = SA_SIGINFO;
 
-	sa.sa_sigaction = bolesnyUpadek;
+	exterminuj.sa_sigaction = bolesnyUpadek;
 	sigaction(SIGINT, &sa, NULL);
 
 
@@ -146,13 +146,12 @@ int main( int argc, char **argv)
 
 			getNap();
 
-			//czekamy na smiersc dzieci
+			//czekamy na smiersc dzieci i propagujemy
 			if(pID1 > 0){
 				kill(pID1, SIGINT);
 				wait(0);
 			}
-			if(pID2 > 0)
-			{
+			if(pID2 > 0){
 				kill(pID2, SIGINT);
 				wait(0);
 			}
@@ -172,7 +171,7 @@ int main( int argc, char **argv)
 
 if (argc == 2) {
 	int tmp = 0;
-	for (size_t i = 0; i < length*600000; i++) {
+	for (long int i = 0; i < length*900000; i++) {
 		tmp++;
 		tmp--;
 	}
