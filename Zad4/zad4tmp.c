@@ -2,6 +2,7 @@
 #include <math.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <utmp.h>
 #include <pwd.h>
@@ -10,16 +11,11 @@
 #include <sys/wait.h>
 #include <signal.h>
 
-
 int flaga = 0;
-int pIDroot;
 
 void bolesnyUpadek(int signal, siginfo_t* siginfo, void* p)
 {
 	flaga++;
-int tmp = 0;
-
-	//kill(pIDroot, SIGINT);
 }
 
 
@@ -27,35 +23,19 @@ int tmp = 0;
 extern char** environ;
 int main( int argc, char **argv)
 {
-
-
-
-
-	if (argc == 2) {
-
-		pIDroot = getpid();
-
-		FILE *fp;
-		if ((fp=fopen("test.txt", "w"))==NULL)
-		{
-			printf("Nie moge otworzyc pliku do zapisu!\n");
-			return 0;
-		}
-		fprintf (fp, "%d", pIDroot);
-		fclose(fp);
-
+	//printf("| argc= %d pID= %d", argc, getpid);
+	switch (argc) {
+		case 4:
+			//printf("| argv[3]= %s ", argv[3]);
+		case 3:
+			//printf("| argv[2]= %s ", argv[2]);
+		case 2:
+			//printf("| argv[1]= %s | ", argv[1]);
+			break;
 	}
 
-	FILE *fp;
 
-	if ((fp=fopen("test.txt", "r"))==NULL)
-	{
-		printf("Nie moge otworzyc pliku do zapisu!\n");
-		return 0;
-	}
-	char ppp[1000];
-	fscanf(fp, "%s", ppp);
-	pIDroot = atoi(ppp);
+
 
 	//Zmiana obslugi sygnalu smierci////
 	struct sigaction sa;
@@ -64,8 +44,6 @@ int main( int argc, char **argv)
 
 	sa.sa_sigaction = bolesnyUpadek;
 	sigaction(SIGINT, &sa, NULL);
-
-
 
 
 	//Sprawdzenie czy parametry zostaly podane
@@ -78,23 +56,32 @@ int main( int argc, char **argv)
 	//Historia//////////////////////////////////
 	char *ar2 = NULL;
 	char bufor[1000];
-	//int pID_root = 99;
+
+	int pID_root = 99999;
 
 	switch(argc)
 	{
 	    case 2:
 				strcat(bufor, argv[1]);
 				strcat(bufor," ");
+				//pID_root = getpid();
 	        break;
 			case 4:
-			case 3:
 				strcat(bufor, argv[2]);
 				strcat(bufor," ");
 				strcat(bufor, argv[1]);
 				strcat(bufor," ");
+				//pID_root = argv[3];
 			  	break;
+	    default :
+					if (argc < 2) {
+						printf("Blad: Program bez parametow\n");
+					} else {
+						printf("Blad: Zbye wiele parametow\n");
+						return 2;
+					}
+	        break;
 	}
-
 
 	//Obliczanie dlugosci//////////////////////////////
 	char* input = argv[1];
@@ -120,26 +107,23 @@ int main( int argc, char **argv)
 		//Rodzimy dzieci
 		if(pID1 == 0)
 			{
-				setpgid(pID1,pID1);
-			//const char* in = input_one;
-			execlp(argv[0], argv[0], input_one , bufor, NULL);
+
+			const char* in = input_one;
+
+			execlp(argv[0], argv[0], input_one , bufor, pID_root, NULL);
 			}
 
 
 			//czekamy na smiersc dziecka
 			if(pID1 > 0)
 			{
-
 				while (1) {
 					if (flaga != 0) {
-
+						kill(pID1, SIGINT);
 						break;
 					}
-					break;
 				}
-				//kill(pID1, SIGINT);
-wait(0);
-
+			wait(0);
 			}
 			//end czekamy na smiersc dziecka ///////////////////////
 			//end Pierwsze dziecko//////////////////////////////////
@@ -150,9 +134,8 @@ wait(0);
 
 			if(pID2 == 0)
 			{
-			setpgid(pID2,pID2);
-			//printf("Arkagdynia ");
-			execlp(argv[0], argv[0], input_two , bufor, NULL);
+
+			execlp(argv[0], argv[0], input_two , bufor, pID_root, NULL);
 
 			}
 
@@ -160,12 +143,10 @@ wait(0);
 			if(pID2 > 0) {
 				while (1) {
 					if (flaga != 0) {
+						kill(pID2, SIGINT);
 						break;
 					}
-					break;
 				}
-				//kill(pID2, SIGINT);
-				//kill(pIDroot, SIGINT);
 
 				wait(0);
 			}
@@ -175,36 +156,7 @@ wait(0);
 		}
 //end Rodzimy dzieci/////////////////////
 
-if (argv[1] != "abcd") {
-	int tmp = 0;
-	for (size_t i = 0; i < 1; i++) {
-		tmp++;
-		tmp--;
-	}
-}
 
-
-printf( "%s ",bufor);
-
-if (0) {
-
-
-switch (argc) {
-	case 4:
-		printf("| argv[3]= %s ", argv[3]);
-	case 3:
-		printf("| argv[2]= %s ", argv[2]);
-	case 2:
-		printf("| argv[1]= %s | ", argv[1]);
-		break;
-}
-printf("| argc= %d pIDroot= %d length= %d\n", argc, pIDroot, length);
-}else
-{
-	printf("\n");
-}
-if (argc == 2) {
-	printf("\n\n\n");
-}
+	printf( "%s || %d \n",bufor, pID_root);
 	return 0;
 	}
