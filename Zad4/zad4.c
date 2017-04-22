@@ -9,16 +9,35 @@
 #include <grp.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <signal.h>
+
+int flaga = 0;
+
+void bolesnyUpadek(int signal, siginfo_t* siginfo, void* p)
+{
+	flaga++;
+}
+
 
 
 extern char** environ;
 int main( int argc, char **argv)
 {
+	//Zmiana obslugi sygnalu smierci////
+	struct sigaction sa;
+
+	sa.sa_flags = SA_SIGINFO;
+
+	sa.sa_sigaction = bolesnyUpadek;
+	sigaction(SIGINT, &sa, NULL);
+
+
 	//Sprawdzenie czy parametry zostaly podane
 	if (argc == 1) {
 		printf("Blad: Podaj ciag znakow\n");
 		return 2;
 	}
+
 
 	//Historia//////////////////////////////////
 	char *ar2 = NULL;
@@ -53,6 +72,7 @@ int main( int argc, char **argv)
 	if((length%2) != 0 && (length) != 1) {length--;}
 	//end Obliczanie dlugosci///////////////////////////////
 
+
 	if(length > 1)
 		{
 
@@ -79,6 +99,12 @@ int main( int argc, char **argv)
 			//czekamy na smiersc dziecka
 			if(pID1 > 0)
 			{
+				while (1) {
+					if (flaga != 0) {
+						kill(pID1, SIGINT);
+						break;
+					}
+				}
 			wait(0);
 			}
 			//end czekamy na smiersc dziecka ///////////////////////
@@ -97,6 +123,13 @@ int main( int argc, char **argv)
 
 			//czekamy na smiersc dziecka
 			if(pID2 > 0) {
+				while (1) {
+					if (flaga != 0) {
+						kill(pID2, SIGINT);
+						break;
+					}
+				}
+
 				wait(0);
 			}
 			//end czekamy na smiersc dziecka
