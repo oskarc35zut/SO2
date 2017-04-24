@@ -1,0 +1,8 @@
+#!/bin/bash
+clear
+
+cd "/home/oskar/Pulpit/SO 2/Zad5"
+gcc zad5.c -o zad5
+
+cd "/home/oskar/Pulpit/SO 2/Zad5"
+#sudo ./zad5
