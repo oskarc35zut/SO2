@@ -22,7 +22,9 @@ void bolesnyUpadek(int signal, siginfo_t* siginfo, void* p)
 void vCtrlZ(int signal, siginfo_t* siginfo, void* p)
 {
 	int _used = 1;
-
+	if (signal == SIGTSTP)
+	{
+			printf("\n");
 	FILE *fp;
 	if ((fp=fopen("flagaZ.txt", "w"))==NULL)
 	{
@@ -30,6 +32,7 @@ void vCtrlZ(int signal, siginfo_t* siginfo, void* p)
 	}
 	fprintf (fp, "%d", _used);
 	fclose(fp);
+	}
 }
 
 void getNap() {
@@ -103,14 +106,12 @@ int main( int argc, char **argv)
 
 	//Zmiana obslugi sygnalu ctrl+z////
 	struct sigaction CtrlZ;
-	sigprocmask(SIG_BLOCK, )
-
-	CtrlZ.sa_flags = SA_SIGINFO;
-	struct sigprocmask CtrlBlock;
+	struct sigaction OldCtrlZ;
 
 	CtrlZ.sa_sigaction = vCtrlZ;
+	CtrlZ.sa_flags = SA_SIGINFO;
+	sigaction(SIGTSTP, NULL, &OldCtrlZ);
 	sigaction(SIGTSTP, &CtrlZ, NULL);
-
 //end Sygnaly//////////////////////////////////////
 
 
@@ -226,8 +227,28 @@ printf("| argc= %d pIDroot= %d length= %d\n", argc, pIDroot, length);
 {
 	printf("\n");
 }
+
+
+
+
+sigaction(SIGTSTP, &OldCtrlZ, NULL);
 if (argc == 2) {
-	printf("\n\n\n");
+
+	if ((fp=fopen("flagaZ.txt", "r"))==NULL)
+	{
+		printf("Nie moge otworzyc pliku do zapisu!\n");
+		return 0;
+	}
+	fscanf(fp, "%s", ppp);
+	pIDroot = atoi(ppp);
+
+	if (pIDroot == 1) {
+		printf("\n\nBlokowany sygnal (Ctr+Z) pojawil się.\n");
+	}
+
+	printf("\n");
 }
+
+
 	return 0;
 	}
