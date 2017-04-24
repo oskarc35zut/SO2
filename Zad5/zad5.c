@@ -12,30 +12,36 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <errno.h>
 
-void PidS(char programName[1000]);
+
+void PidS(char programName[1000], char argvZERO[1000]);
+
+
 
 extern char** environ;
 int main( int argc, char **argv)
 {
-	char wejs[1000];
+	const char *target = "./zad5.c";
+	const char *linkpath = "./killall";
 
+	symlink(target, linkpath);
 
+	//printf("|%s|\n", argv[0]);
 
 	if (argc == 2) {
+		char wejs[1000];
+		char argvZERO[1000];
+		strcpy(argvZERO, argv[0]);
 		strcpy(wejs, argv[1]);
-		printf(" |%s| \n", wejs);
-		PidS(wejs);
+		PidS(wejs, argvZERO);
 	}
-
-
 
 printf("\n\n");
 	return 0;
 	}
 
-void PidS(char programName[1000]) {
-	printf("programName = |%s|\n", programName);
+void PidS(char programName[1000], char argvZERO[1000]) {
 
 		DIR* str_dir;
 		struct dirent* wejscie;
@@ -43,9 +49,11 @@ void PidS(char programName[1000]) {
 		char bufor;
 		char str_name[1000];
 		char str_postName[1000];
+		char compare[1000];
 		char tmp[1000];
 		int comm;
 		int name;
+		int int_pID;
 
 		char buff;
 		char pnamebuff[1024];
@@ -83,8 +91,29 @@ void PidS(char programName[1000]) {
 	      }
 	    }
 
-			if (!strcmp(pnamebuff, programName)) {
-				printf("%s ", wejscie->d_name);
+			int_pID = atoi(wejscie->d_name);
+
+			if (!strcmp(pnamebuff, programName))
+			{
+				strcpy(compare, "./zad5");
+				if (!strcmp(argvZERO, compare))
+				{
+					printf("%d ", int_pID);
+				}
+				else
+				{
+					strcpy(compare, "./killall");
+					if (!strcmp(argvZERO, compare))
+					{
+						//printf("| kill# %d |", int_pID);
+						kill(int_pID, SIGINT);
+					}
+					else
+					{
+						printf("\n# Blad pid #");
+					}
+				}
+
 			}
 
 
