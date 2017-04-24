@@ -2,3 +2,4 @@
 clear
 gcc zad4.c -o zad4
 ./zad4 abcd
+echo "Koniec kompilacji"

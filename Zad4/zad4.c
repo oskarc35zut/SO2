@@ -17,9 +17,19 @@ int pIDroot;
 void bolesnyUpadek(int signal, siginfo_t* siginfo, void* p)
 {
 	flaga++;
-int tmp = 0;
+}
 
-	//kill(pIDroot, SIGINT);
+void vCtrlZ(int signal, siginfo_t* siginfo, void* p)
+{
+	int _used = 1;
+
+	FILE *fp;
+	if ((fp=fopen("flagaZ.txt", "w"))==NULL)
+	{
+		printf("Nie moge otworzyc pliku do zapisu!\n");
+	}
+	fprintf (fp, "%d", _used);
+	fclose(fp);
 }
 
 void getNap() {
@@ -39,10 +49,13 @@ void getNap() {
 extern char** environ;
 int main( int argc, char **argv)
 {
+	//Sprawdzenie czy parametry zostaly podane
+	if (argc == 1) {
+		printf("Blad: Podaj ciag znakow\n");
+		return 2;
+	}
 
-
-
-
+//Sygnaly/////////////////////////////////////////
 	if (argc == 2) {
 
 		pIDroot = getpid();
@@ -54,6 +67,16 @@ int main( int argc, char **argv)
 			return 0;
 		}
 		fprintf (fp, "%d", pIDroot);
+		fclose(fp);
+
+		int used = 0;
+
+		if ((fp=fopen("flagaZ.txt", "w"))==NULL)
+		{
+			printf("Nie moge otworzyc pliku do zapisu!\n");
+			return 0;
+		}
+		fprintf (fp, "%d", used);
 		fclose(fp);
 
 	}
@@ -75,16 +98,22 @@ int main( int argc, char **argv)
 	exterminuj.sa_flags = SA_SIGINFO;
 
 	exterminuj.sa_sigaction = bolesnyUpadek;
-	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGINT, &exterminuj, NULL);
 
 
+	//Zmiana obslugi sygnalu ctrl+z////
+	struct sigaction CtrlZ;
+	sigprocmask(SIG_BLOCK, )
+
+	CtrlZ.sa_flags = SA_SIGINFO;
+	struct sigprocmask CtrlBlock;
+
+	CtrlZ.sa_sigaction = vCtrlZ;
+	sigaction(SIGTSTP, &CtrlZ, NULL);
+
+//end Sygnaly//////////////////////////////////////
 
 
-	//Sprawdzenie czy parametry zostaly podane
-	if (argc == 1) {
-		printf("Blad: Podaj ciag znakow\n");
-		return 2;
-	}
 
 
 	//Historia//////////////////////////////////
